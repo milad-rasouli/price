@@ -1,5 +1,5 @@
 # Price 
-i used Gin as http framework because it's much easier.
+I used Gin as http framework because it's much easier. and used slog for structured log.
 ## postgres
 ```shell
 sudo docker compose up --wait -d
