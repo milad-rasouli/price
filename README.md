@@ -11,6 +11,17 @@ sudo docker compose up --wait -d
 make db-migrate-up
 ````
 
+### clone
+
+```shell
+git clone https://github.com/milad-rasouli/price.git
+```
+
+### env
+
+```shell
+cp env.example .env
+```
 ### run
 
 ```shell
