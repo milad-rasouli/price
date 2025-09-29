@@ -54,9 +54,6 @@ curl -X GET "http://localhost:8080/prices/history?symbol=btc&interval=1m" \
 ### Get history with explicit time range
 
 ```bash
-FROM=$(date -d "6 hours ago" +%s)
-TO=$(date +%s)
-
 curl -X GET "http://localhost:8080/prices/history?symbol=btc&interval=1m&from=$FROM&to=$TO" \
   -H "Accept: application/json"
 ```
