@@ -1,0 +1,269 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/liveness": {
+            "get": {
+                "description": "Used by Kubernetes or monitoring tools to check if the service is alive.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Liveness probe",
+                "responses": {
+                    "200": {
+                        "description": "Service is alive",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "503": {
+                        "description": "Service unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/prices/history": {
+            "get": {
+                "description": "Returns historical price data for a given symbol within a time range, optionally grouped by interval.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prices"
+                ],
+                "summary": "Get historical cryptocurrency prices",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Symbol (e.g., btc, eth)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Interval (e.g., 1m, 5m, 1h, 1d)",
+                        "name": "interval",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Start time (unix timestamp)",
+                        "name": "from",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "End time (unix timestamp)",
+                        "name": "to",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-array_github_com_milad-rasouli_price_internal_app_api_dto_HistoryRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "504": {
+                        "description": "Gateway Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/prices/latest": {
+            "get": {
+                "description": "Returns the latest stored price for a given symbol, including 24h change.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "prices"
+                ],
+                "summary": "Get latest cryptocurrency price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Symbol (e.g., btc, eth)",
+                        "name": "symbol",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-github_com_milad-rasouli_price_internal_app_api_dto_LatestRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "504": {
+                        "description": "Gateway Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    }
+                }
+            }
+        },
+        "/readiness": {
+            "get": {
+                "description": "Verifies if dependencies (e.g., PostgreSQL) are healthy and service can handle requests.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Readiness probe",
+                "responses": {
+                    "200": {
+                        "description": "Service is ready",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    },
+                    "503": {
+                        "description": "Service not ready",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_milad-rasouli_price_internal_app_api_dto.HistoryRes": {
+            "type": "object",
+            "properties": {
+                "avg_price": {
+                    "type": "number"
+                },
+                "last_price": {
+                    "type": "number"
+                },
+                "startedAt": {
+                    "type": "integer"
+                },
+                "symbol": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_milad-rasouli_price_internal_app_api_dto.LatestRes": {
+            "type": "object",
+            "properties": {
+                "change_24h_pct": {
+                    "type": "number"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_milad-rasouli_price_internal_app_api_response.Response-any": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_milad-rasouli_price_internal_app_api_response.Response-array_github_com_milad-rasouli_price_internal_app_api_dto_HistoryRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_dto.HistoryRes"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_milad-rasouli_price_internal_app_api_response.Response-github_com_milad-rasouli_price_internal_app_api_dto_LatestRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_milad-rasouli_price_internal_app_api_dto.LatestRes"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

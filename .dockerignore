@@ -1,0 +1,9 @@
+*.md
+mock
+migration
+bin
+Makefile
+.env
+env.example
+*.json
+.github

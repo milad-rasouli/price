@@ -1,0 +1,179 @@
+definitions:
+  github_com_milad-rasouli_price_internal_app_api_dto.HistoryRes:
+    properties:
+      avg_price:
+        type: number
+      last_price:
+        type: number
+      startedAt:
+        type: integer
+      symbol:
+        type: string
+    type: object
+  github_com_milad-rasouli_price_internal_app_api_dto.LatestRes:
+    properties:
+      change_24h_pct:
+        type: number
+      price:
+        type: number
+      symbol:
+        type: string
+      timestamp:
+        type: integer
+    type: object
+  github_com_milad-rasouli_price_internal_app_api_response.Response-any:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  ? github_com_milad-rasouli_price_internal_app_api_response.Response-array_github_com_milad-rasouli_price_internal_app_api_dto_HistoryRes
+  : properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_dto.HistoryRes'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  github_com_milad-rasouli_price_internal_app_api_response.Response-github_com_milad-rasouli_price_internal_app_api_dto_LatestRes:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_dto.LatestRes'
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /liveness:
+    get:
+      description: Used by Kubernetes or monitoring tools to check if the service
+        is alive.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Service is alive
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "503":
+          description: Service unavailable
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+      summary: Liveness probe
+      tags:
+      - health
+  /prices/history:
+    get:
+      consumes:
+      - application/json
+      description: Returns historical price data for a given symbol within a time
+        range, optionally grouped by interval.
+      parameters:
+      - description: Symbol (e.g., btc, eth)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      - description: Interval (e.g., 1m, 5m, 1h, 1d)
+        in: query
+        name: interval
+        type: string
+      - description: Start time (unix timestamp)
+        in: query
+        name: from
+        type: integer
+      - description: End time (unix timestamp)
+        in: query
+        name: to
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-array_github_com_milad-rasouli_price_internal_app_api_dto_HistoryRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "504":
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+      summary: Get historical cryptocurrency prices
+      tags:
+      - prices
+  /prices/latest:
+    get:
+      consumes:
+      - application/json
+      description: Returns the latest stored price for a given symbol, including 24h
+        change.
+      parameters:
+      - description: Symbol (e.g., btc, eth)
+        in: query
+        name: symbol
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-github_com_milad-rasouli_price_internal_app_api_dto_LatestRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "504":
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+      summary: Get latest cryptocurrency price
+      tags:
+      - prices
+  /readiness:
+    get:
+      description: Verifies if dependencies (e.g., PostgreSQL) are healthy and service
+        can handle requests.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Service is ready
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+        "503":
+          description: Service not ready
+          schema:
+            $ref: '#/definitions/github_com_milad-rasouli_price_internal_app_api_response.Response-any'
+      summary: Readiness probe
+      tags:
+      - health
+swagger: "2.0"

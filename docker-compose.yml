@@ -1,0 +1,17 @@
+services:
+  postgres-timescaledb:
+    image: timescale/timescaledb:2.10.0-pg15
+    container_name: postgres_coin_db_ts
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: coin
+    ports:
+      - "5438:5432"
+    volumes:
+      - postgres-timescale-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+
+volumes:
+  postgres-timescale-data:
