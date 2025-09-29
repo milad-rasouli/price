@@ -21,9 +21,15 @@ make run
 ```shell
 make cron
 ```
-## Swagger
+### Swagger
 http://localhost:8080/swagger/index.html
 
+
+### Docker
+also available in github registry.
+```shell
+docker pull ghcr.io/milad-rasouli/price:latest
+```
 ### Get latest price
 
 ```bash
